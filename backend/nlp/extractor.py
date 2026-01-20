@@ -1,2 +1,0 @@
-# PDF/DOCX text extraction 
-
