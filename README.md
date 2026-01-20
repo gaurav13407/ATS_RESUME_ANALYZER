@@ -81,3 +81,75 @@ cd backend
 pip install -r requirements.txt
 uvicorn app.main:app --reload
 
+#Project Structure
+
+ATS-Resume-Analyzer/
+│
+├── frontend/                      # React + Tailwind frontend
+│   ├── public/
+│   │   └── index.html
+│   │
+│   ├── src/
+│   │   ├── assets/                # Icons, images, logos
+│   │   ├── components/            # Reusable UI components
+│   │   │   ├── Navbar.jsx
+│   │   │   ├── FileUpload.jsx
+│   │   │   ├── ScoreCard.jsx
+│   │   │   ├── KeywordList.jsx
+│   │   │   └── Suggestions.jsx
+│   │   │
+│   │   ├── pages/                 # Page-level components
+│   │   │   ├── Home.jsx
+│   │   │   ├── Analyzer.jsx
+│   │   │   └── Result.jsx
+│   │   │
+│   │   ├── services/              # API calls
+│   │   │   └── api.js
+│   │   │
+│   │   ├── styles/                # Tailwind / custom styles
+│   │   │   └── index.css
+│   │   │
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   │
+│   ├── tailwind.config.js
+│   ├── package.json
+│   └── vite.config.js
+│
+├── backend/                       # FastAPI backend
+│   ├── app/
+│   │   ├── main.py                # FastAPI entry point
+│   │   │
+│   │   ├── api/
+│   │   │   └── routes.py           # API endpoints
+│   │   │
+│   │   ├── core/
+│   │   │   ├── ats_scoring.py      # ATS score calculation logic
+│   │   │   ├── keyword_matcher.py  # TF-IDF + cosine similarity
+│   │   │   └── formatter.py        # Resume formatting checks
+│   │   │
+│   │   ├── nlp/
+│   │   │   ├── extractor.py        # PDF/DOCX text extraction
+│   │   │   ├── skills.py           # Skill extraction rules
+│   │   │   └── preprocess.py       # Cleaning, tokenization
+│   │   │
+│   │   ├── models/
+│   │   │   └── response_schema.py  # Pydantic schemas
+│   │   │
+│   │   ├── utils/
+│   │   │   └── file_handler.py     # Upload handling
+│   │   │
+│   │   └── database/
+│   │       └── db.py               # SQLite/Postgres setup
+│   │
+│   ├── requirements.txt
+│   └── README.md
+│
+├── docs/                          # Project documentation
+│   ├── architecture.md
+│   ├── ats_scoring.md
+│   └── api_contract.md
+│
+├── .gitignore
+└── README.md                      # Main project README
+
