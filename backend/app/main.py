@@ -1,11 +1,14 @@
 # FastAPI entry point
 from fastapi import FastAPI, UploadFile, File, HTTPException
-
+from  pydantic import BaseModel
+from app.nlp.matcher import match_skills 
 from app.utils.file_handler import save_upload_file
 from app.nlp.extractor import extract_text_from_pdf, extract_text_from_docx
 from app.nlp.preprocessor import clean_text
 from app.nlp.skills import extract_skills
-
+class JDMatchRequest(BaseModel):
+    job_description:str 
+    resume_skills:list[str]
 app = FastAPI()
 
 @app.post("/extract-resume")
@@ -32,4 +35,19 @@ async def extract_resume(file: UploadFile = File(...)):
         "skills_count":len(skills),
         "cleaned_text_preview": cleaned_text[:1000]
     }
+
+@app.post("/match-jb")
+async def match_job_description(data:JDMatchRequest):
+    cleaned_jb=clean_text(data.job_description)
+    jd_skills=extract_skills(cleaned_jb)
+
+    result=match_skills(
+            resume_skills=data.resume_skills,
+            jd_skills=jd_skills
+            )
+
+    return {
+            "jd_skills":jd_skills,
+            **result
+            }
 
