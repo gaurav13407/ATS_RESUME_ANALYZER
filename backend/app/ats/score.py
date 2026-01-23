@@ -1,10 +1,15 @@
-def calculate_ats_score(skill_match_percentage:float)->dict:
-    ats_score=round(skill_match_percentage,2)
+def calculate_final_ats_score(skill_match:float,tfidf_similarity:float)->dict:
+    final_score=round(
+            (0.7*skill_match)+(0.3*tfidf_similarity),
+            2
+            )
 
     return {
-            "ats_score":ats_score,
+            "final_ats_score":final_score,
             "breakdown":{
-                "skill_match_percentage":skill_match_percentage,
-                "weight":"100%"
+                "skill_match_percentage":skill_match,
+                "skill_weight":"70%",
+                "tfidf_similarity":tfidf_similarity,
+                "tfidf_weight":"30%"
                 }
             }

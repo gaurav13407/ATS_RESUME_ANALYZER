@@ -1,15 +1,19 @@
 # FastAPI entry point
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from  pydantic import BaseModel
+from app.ats import suggestions
 from app.nlp.matcher import match_skills 
 from app.utils.file_handler import save_upload_file
 from app.nlp.extractor import extract_text_from_pdf, extract_text_from_docx
 from app.nlp.preprocessor import clean_text
 from app.nlp.skills import extract_skills
-from app.ats.score import calculate_ats_score
+from app.nlp.similarity import compute_tfidf_similarity
+from app.ats.score import calculate_final_ats_score
+from app.ats.suggestions import generate_suggestions
 class JDMatchRequest(BaseModel):
     job_description:str 
     resume_skills:list[str]
+    resume_text:str
 app = FastAPI()
 
 @app.post("/extract-resume")
@@ -47,13 +51,26 @@ async def match_job_description(data:JDMatchRequest):
             jd_skills=jd_skills
             )
 
-    score_result=calculate_ats_score(
-            match_result["match_percentage"]
+    tfidf_score=compute_tfidf_similarity(
+            resume_text=data.resume_text,
+            jd_text=cleaned_jb
+            )
+
+    suggestions=generate_suggestions(
+            missing_skills=match_result["missing_skills"],
+            tfidf_score=tfidf_score
+            )
+
+    final_score=calculate_final_ats_score(
+            skill_match=match_result["match_percentage"],
+            tfidf_similarity=tfidf_score
             )
 
     return {
             "jd_skills":jd_skills,
             **match_result,
-            **score_result
+            "tfidf_similarity":tfidf_score,
+            **final_score,
+            "improvement_suggestions":suggestions
             }
 
