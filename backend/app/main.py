@@ -6,6 +6,7 @@ from app.utils.file_handler import save_upload_file
 from app.nlp.extractor import extract_text_from_pdf, extract_text_from_docx
 from app.nlp.preprocessor import clean_text
 from app.nlp.skills import extract_skills
+from app.ats.score import calculate_ats_score
 class JDMatchRequest(BaseModel):
     job_description:str 
     resume_skills:list[str]
@@ -41,13 +42,18 @@ async def match_job_description(data:JDMatchRequest):
     cleaned_jb=clean_text(data.job_description)
     jd_skills=extract_skills(cleaned_jb)
 
-    result=match_skills(
+    match_result=match_skills(
             resume_skills=data.resume_skills,
             jd_skills=jd_skills
             )
 
+    score_result=calculate_ats_score(
+            match_result["match_percentage"]
+            )
+
     return {
             "jd_skills":jd_skills,
-            **result
+            **match_result,
+            **score_result
             }
 
