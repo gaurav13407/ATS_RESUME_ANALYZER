@@ -4,6 +4,7 @@ from fastapi import FastAPI, UploadFile, File, HTTPException
 from app.utils.file_handler import save_upload_file
 from app.nlp.extractor import extract_text_from_pdf, extract_text_from_docx
 from app.nlp.preprocessor import clean_text
+from app.nlp.skills import extract_skills
 
 app = FastAPI()
 
@@ -22,9 +23,13 @@ async def extract_resume(file: UploadFile = File(...)):
 
     cleaned_text = clean_text(raw_text)
 
+    skills=extract_skills(cleaned_text)
+
     return {
         "filename": file.filename,
         "raw_text_preview": raw_text[:3000],
+        "skills_found":skills,
+        "skills_count":len(skills),
         "cleaned_text_preview": cleaned_text[:1000]
     }
 
