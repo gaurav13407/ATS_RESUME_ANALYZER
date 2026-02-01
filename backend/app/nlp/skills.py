@@ -8,7 +8,7 @@ SKILL_SET={
         "scikit learn","pandas","numpy","opencv","nlp",
 
         #Web/Backend 
-        "falsk","fastapi","rest api","streamlit",
+        "flask","fastapi","rest api","streamlit",
 
         #Databases 
         "mysql","mongodb","sqlite",

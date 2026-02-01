@@ -21,15 +21,27 @@ ATS compatibility score with detailed feedback.
 
 ## 🧠 ATS Scoring Logic
 
-| Component               | Weight |
-|------------------------|--------|
-| Keyword Matching        | 40%    |
-| Skill Coverage          | 20%    |
-| Experience Relevance    | 15%    |
-| Formatting Quality      | 15%    |
-| Section Completeness    | 10%    |
+The ATS score is calculated using a weighted formula:
 
-Final Score = Weighted Sum (0–100)
+```
+Final ATS Score = (0.7 × Skill Match %) + (0.3 × TF-IDF Similarity %)
+```
+
+| Component               | Formula | Weight |
+|------------------------|---------|--------|
+| Skill Match            | Matched Skills / Total Required Skills × 100 | 70% |
+| TF-IDF Similarity      | Cosine similarity between resume & JD | 30% |
+
+**Example:**
+- Skill Match: 90% (9 out of 10 skills matched)
+- TF-IDF Similarity: 20% (text alignment score)
+- Final Score: (0.7 × 90) + (0.3 × 20) = 63 + 6 = **69%**
+
+### Score Interpretation
+- **80-100**: Excellent match, high chance of passing ATS
+- **60-79**: Good match, but needs keyword improvements
+- **40-59**: Fair match, significant skills/keywords missing
+- **Below 40**: Poor match, major gaps in required skills
 
 ---
 
@@ -75,18 +87,60 @@ Final Score = Weighted Sum (0–100)
 
 ## ▶️ How to Run
 
-### Backend
+### Quick Start (Using Startup Scripts)
+
+#### Start Backend
 ```bash
 cd backend
-pip install -r requirements.txt
-uvicorn app.main:app --reload
+bash startbackend.sh
+```
+The backend will start on **http://localhost:8000**
+- API Documentation: http://localhost:8000/docs
 
-### Frontend
+#### Start Frontend (in a new terminal)
 ```bash
 cd frontend
+bash startfrontend.sh
+```
+The frontend will start on **http://localhost:5173** (or **http://localhost:5174** if port is in use)
+
+---
+
+### Manual Start (Without Scripts)
+
+#### Backend Setup
+```bash
+cd backend
+# Create and activate virtual environment (if not already done)
+python3 -m venv venv
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Start the server
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+#### Frontend Setup (in a new terminal)
+```bash
+cd frontend
+# Install dependencies
 npm install
+
+# Start development server
 npm run dev
 ```
+
+---
+
+### Access the Application
+1. Open your browser and go to **http://localhost:5173** (or 5174)
+2. You'll see the ATS Resume Analyzer landing page
+3. Click "Analyze My Resume"
+4. Upload a PDF or DOCX resume file
+5. Paste a job description
+6. Click "Analyze Resume" to get results
 │   │   ├── pages/                 # Page-level components
 │   │   │   ├── Home.jsx
 │   │   │   ├── Analyzer.jsx

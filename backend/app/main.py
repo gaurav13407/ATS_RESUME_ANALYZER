@@ -1,5 +1,6 @@
 # FastAPI entry point
 from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from  pydantic import BaseModel
 from app.ats import suggestions
 from app.nlp.matcher import match_skills 
@@ -15,6 +16,15 @@ class JDMatchRequest(BaseModel):
     resume_skills:list[str]
     resume_text:str
 app = FastAPI()
+
+# Enable CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/extract-resume")
 async def extract_resume(file: UploadFile = File(...)):
@@ -41,7 +51,7 @@ async def extract_resume(file: UploadFile = File(...)):
         "cleaned_text_preview": cleaned_text[:1000]
     }
 
-@app.post("/match-jb")
+@app.post("/match-jd")
 async def match_job_description(data:JDMatchRequest):
     cleaned_jb=clean_text(data.job_description)
     jd_skills=extract_skills(cleaned_jb)
