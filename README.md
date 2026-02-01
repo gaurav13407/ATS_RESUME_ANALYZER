@@ -81,23 +81,12 @@ cd backend
 pip install -r requirements.txt
 uvicorn app.main:app --reload
 
-#Project Structure
-
-ATS-Resume-Analyzer/
-│
-├── frontend/                      # React + Tailwind frontend
-│   ├── public/
-│   │   └── index.html
-│   │
-│   ├── src/
-│   │   ├── assets/                # Icons, images, logos
-│   │   ├── components/            # Reusable UI components
-│   │   │   ├── Navbar.jsx
-│   │   │   ├── FileUpload.jsx
-│   │   │   ├── ScoreCard.jsx
-│   │   │   ├── KeywordList.jsx
-│   │   │   └── Suggestions.jsx
-│   │   │
+### Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
 │   │   ├── pages/                 # Page-level components
 │   │   │   ├── Home.jsx
 │   │   │   ├── Analyzer.jsx
